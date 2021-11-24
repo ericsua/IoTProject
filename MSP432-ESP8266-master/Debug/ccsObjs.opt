@@ -1,0 +1,1 @@
+"./main.obj" "./startup_msp432p401r_ccs.obj" "./system_msp432p401r.obj" "./Devices/ESP8266.obj" "./Devices/MSPIO.obj" "./Hardware/CS_Driver.obj" "./Hardware/GPIO_Driver.obj" "./Hardware/UART_Driver.obj" "../msp432p401r.cmd" -llibc.a -l"/Users/eric/Downloads/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/ccs/msp432p4xx_driverlib.lib" 
