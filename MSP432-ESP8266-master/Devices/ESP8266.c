@@ -66,7 +66,7 @@ bool ESP8266_WaitForAnswer(uint32_t Tries)
 bool ESP8266_CheckConnection(void)
 {
     MSPrintf(EUSCI_A2_BASE, AT);
-    __delay_cycles(12000);
+    __delay_cycles(120000);
     if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
     {
         return false;
@@ -170,8 +170,9 @@ bool ESP8266_AvailableAPs(void)
 bool ESP8266_ConnectToAP(char *ssid, char *Password)
 {
     MSPrintf(EUSCI_A2_BASE, "%s=\"%s\",\"%s\"\r\n", AT_CWJAP, ssid, Password);
+    //printf("Connecting to: %s=\"%s\",\"%s\"\r\n", AT_CWJAP, ssid, Password);
 
-    __delay_cycles(12000);
+    __delay_cycles(120000000);
     if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
     {
         return false;
@@ -259,7 +260,7 @@ bool ESP8266_SendData(char ID, char *Data, uint32_t DataSize)
     printf("ltoa: %s\n", size);
     MSPrintf(EUSCI_A2_BASE, "%s=%c,%s\r\n", AT_CIPSEND, ID, size);
 
-    __delay_cycles(24000000);
+    __delay_cycles(240000);
     if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
     {
         return false;
@@ -272,7 +273,7 @@ bool ESP8266_SendData(char ID, char *Data, uint32_t DataSize)
 
     MSPrintf(EUSCI_A2_BASE, Data);
 
-    __delay_cycles(48000000);
+    __delay_cycles(96000000);
     if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
     {
         return false;
@@ -282,6 +283,41 @@ bool ESP8266_SendData(char ID, char *Data, uint32_t DataSize)
     {
         return false;
     }
+
+    return true;
+}
+
+bool ESP8266_SendDataLoop(char ID, char *Data, uint32_t DataSize)
+{
+    char size[5];
+
+    ltoa(DataSize, size, 10);
+    //printf("ltoa: %s\n", size);
+    MSPrintf(EUSCI_A2_BASE, "%s=%c,%s\r\n", AT_CIPSEND, ID, size);
+
+    __delay_cycles(240000);
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    {
+        return false;
+    }
+
+    if(strstr(ESP8266_Buffer, ">") == NULL)
+    {
+        return false;
+    }
+
+    MSPrintf(EUSCI_A2_BASE, Data);
+
+    /*__delay_cycles(96000000);
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    {
+        return false;
+    }
+
+    if(strstr(ESP8266_Buffer, "OK") == NULL)
+    {
+        return false;
+    }*/
 
     return true;
 }
